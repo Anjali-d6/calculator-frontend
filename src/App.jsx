@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 function App() {
@@ -6,86 +5,44 @@ function App() {
   const [num2, setNum2] = useState("");
   const [result, setResult] = useState(null);
 
-  async function handleAdd() {
-    const response = await fetch("https://calculator-backend-t3fb.onrender.com",{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  const API_URL = "https://calculator-backend-t3fb.onrender.com";
 
-      },
-      body: JSON.stringify({
-        num1: num1,
-        num2: num2,
-      })
-    });
-    const data = await response.json();
+  async function calculate(operation) {
+    if (num1 === "" || num2 === "") {
+      setResult("Please enter both numbers");
+      return;
+    }
 
-    setResult(data.result);
+    if (operation === "div" && Number(num2) === 0) {
+      setResult("Cannot divide by zero");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/${operation}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          num1: Number(num1),
+          num2: Number(num2),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setResult(data.error || "Calculation failed");
+        return;
+      }
+
+      setResult(data.result);
+    } catch (error) {
+      console.error("API error:", error);
+      setResult("Unable to connect to backend");
+    }
   }
-
-  
-async function handleSubtract() {
-  const response = await fetch("https://calculator-backend-t3fb.onrender.com", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      num1: num1,
-      num2: num2,
-    }),
-  });
-
-  const data = await response.json();
-
-  setResult(data.result);
-}
-
-
-  
-async function handleMultiply() {
-  const response = await fetch("https://calculator-backend-t3fb.onrender.com", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      num1: num1,
-      num2: num2,
-    }),
-  });
-
-  const data = await response.json();
-
-  setResult(data.result);
-}
-
-
-
-async function handleDivide() {
-  if (Number(num2) === 0) {
-    setResult("Cannot divide by zero");
-    return;
-  }
-
-  const response = await fetch("https://calculator-backend-t3fb.onrender.com", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      num1: num1,
-      num2: num2,
-    }),
-  });
-
-  const data = await response.json();
-
-  setResult(data.result);
-}
-
-
-
 
   return (
     <div>
@@ -111,10 +68,10 @@ async function handleDivide() {
       <br />
       <br />
 
-      <button onClick={handleAdd}>Add</button>
-      <button onClick={handleSubtract}>Subtract</button>
-      <button onClick={handleMultiply}>Multiply</button>
-      <button onClick={handleDivide}>Divide</button>
+      <button onClick={() => calculate("add")}>Add</button>
+      <button onClick={() => calculate("sub")}>Subtract</button>
+      <button onClick={() => calculate("mul")}>Multiply</button>
+      <button onClick={() => calculate("div")}>Divide</button>
 
       <h2>Result: {result !== null ? result : ""}</h2>
     </div>
