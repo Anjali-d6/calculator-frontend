@@ -7,7 +7,7 @@ function App() {
   const [result, setResult] = useState(null);
 
   async function handleAdd() {
-    const response = await fetch("http://localhost:5001/add",{
+    const response = await fetch("https://calculator-backend-t3fb.onrender.com",{
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +25,7 @@ function App() {
 
   
 async function handleSubtract() {
-  const response = await fetch("http://localhost:5001/sub", {
+  const response = await fetch("https://calculator-backend-t3fb.onrender.com", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -44,7 +44,7 @@ async function handleSubtract() {
 
   
 async function handleMultiply() {
-  const response = await fetch("http://localhost:5001/mul", {
+  const response = await fetch("https://calculator-backend-t3fb.onrender.com", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -68,7 +68,7 @@ async function handleDivide() {
     return;
   }
 
-  const response = await fetch("http://localhost:5001/div", {
+  const response = await fetch("https://calculator-backend-t3fb.onrender.com", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
